@@ -1,33 +1,36 @@
 <?php
 
-class Password {
+class Password
+{
     private $password;
 
-    public function __construct($password) {
+    public function __construct($password)
+    {
         $this->password = $password;
     }
 
-    public function getPassword() {
-        return $this->password;
-    }
+    public function generate($length = 8, $complexity = "normal")
+    {
+        $uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $lowercase = "abcdefghijklmnopqrstuvwxyz";
+        $numbers = "0123456789";
+        $specialChars = "!@#$%^&*()_+-=[]{}|;':\"<>,.?/\\";
 
-    public function setPassword($password) {
-        $this->password = $password;
-    }
-
-    public static function generate($length, $complexity) {
-        $chars = '';
-        
-        if ($complexity) {
-            $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;':,.<>/?\\";
-        } else {
-            $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        $characters = $lowercase . $uppercase . $numbers;
+        if ($complexity == "strong") {
+            $characters .= $specialChars;
         }
-        
-        return substr(str_shuffle($chars), 0, $length);
+
+        $generatedPassword = "";
+        for ($i = 0; $i < $length; $i++) {
+            $generatedPassword .= $characters[rand(0, strlen($characters) - 1)];
+        }
+
+        return $generatedPassword;
     }
 
-    public function check($password2) {
-        return $this->password === $password2;
+    public function check($password)
+    {
+        return $this->password === $password;
     }
 }
